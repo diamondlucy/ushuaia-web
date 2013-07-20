@@ -1,0 +1,19 @@
+# mac OS #
+.DS_Store
+
+# java #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# IntelliJ
+.idea/
+*.iml
+
+# output 
+target/
+out/
+
