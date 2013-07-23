@@ -1,0 +1,62 @@
+<script src='Globalization.js'></script>
+<script src='BurnupData.js'></script>
+<script src='BurnupChart.js'></script>
+<script src='spec/MockData.js'></script>
+
+<script>
+	var createSingleVersionDataProvider = function(mouseOnVersion){
+		versionData = getBurnupData();
+		var getData =versionData.getData;
+		versionData.getData = function(){
+			var data = getData();
+			data.versions = [mouseOnVersion];
+			return data;
+		}
+		versionData.more = function(){return versionData.getData();};
+		versionData.less = function(){return versionData.getData();};
+		return versionData;
+	}
+	window.onload=function(){
+		var canvas = document.getElementById("burnup");
+		var chart = getBurnupChart(document.getElementById("burnup"));
+		var allData = getBurnupData(dataProvider);
+		var versionData = null;
+		var burnupData = allData;
+		burnupData.more();
+		chart.draw(burnupData.getData(),-1,-1);
+		
+		canvas.onclick = function(e){
+			var mouseOnVersion = chart.getMouseOnVersion();
+			if(burnupData!=versionData && mouseOnVersion!=null){
+				versionData = createSingleVersionDataProvider(mouseOnVersion);
+				burnupData = versionData;
+			}else{
+				burnupData = allData;
+			}
+			chart.draw(burnupData.getData(),e.x,e.y);
+		}
+		/*canvas.ondblclick = function(e){
+			chart.zoom(burnupData.getData(),e.x,e.y);
+		}*/
+	  canvas.onmousemove = function(e){
+				chart.draw(burnupData.getData(),e.x,e.y);
+		};
+		
+		canvas.onmousewheel = function(e){
+			var evt=window.event || e;
+			var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta;
+			if(chart.getZoom()!=1){
+				if(delta>0) chart.move(burnupData.getData(),30,e.x,e.y);
+				else chart.move(burnupData.getData(),-30,e.x,e.y);
+			}else{
+				if(delta>0) chart.draw(burnupData.less(),e.x,e.y);
+				else chart.draw(burnupData.more(),e.x,e.y);
+			}
+		};
+}
+</script>
+<html>
+	<body>
+	<canvas width='1200' height='500' id='burnup'></canvas>
+	</body>
+</html>

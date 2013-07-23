@@ -1,0 +1,22 @@
+var BurnupData = function(){
+	var data = [];
+	var moreBurnupData = function(){
+		var release = dataProvider.get(data.length);
+		if(release==null){
+			data[data.length]=release;
+		}
+		return data;
+	};
+	var lessBurnupData = function(){
+		if(data.length>1){
+			data.pop();
+		}
+		return data;
+	};
+	
+	
+	return {
+		more: moreBurnupData,
+		less: lessBurnupData
+	}
+}();
