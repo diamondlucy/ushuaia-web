@@ -38,22 +38,28 @@
 		/*canvas.ondblclick = function(e){
 			chart.zoom(burnupData.getData(),e.x,e.y);
 		}*/
-	  canvas.onmousemove = function(e){
-				chart.draw(burnupData.getData(),e.x,e.y);
-		};
-		
-		canvas.onmousewheel = function(e){
-			var evt=window.event || e;
-			var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta;
-			if(chart.getZoom()!=1){
-				if(delta>0) chart.move(burnupData.getData(),30,e.x,e.y);
-				else chart.move(burnupData.getData(),-30,e.x,e.y);
-			}else{
-				if(delta>0) chart.draw(burnupData.less(),e.x,e.y);
-				else chart.draw(burnupData.more(),e.x,e.y);
-			}
-		};
-}
+	    canvas.onmousemove = function(e){
+	      		chart.draw(burnupData.getData(),e.x,e.y);
+	    };
+	      
+	    var zoomChart = function(e){
+	      	var evt=window.event || e;
+	      	var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta;
+	      	if(chart.getZoom()!=1){
+	      		if(delta>0) chart.move(burnupData.getData(),30,e.x,e.y);
+	      		else chart.move(burnupData.getData(),-30,e.x,e.y);
+	      	}else{
+	      		if(delta>0) chart.draw(burnupData.less(),e.x,e.y);
+	      		else chart.draw(burnupData.more(),e.x,e.y);
+	      	}
+	    };
+
+        if ('onmousewheel' in document) {
+            canvas.onmousewheel = zoomChart;
+        } else {
+            canvas.addEventListener('DOMMouseScroll', zoomChart, false);
+        }
+    }
 </script>
 <html>
 	<body>
